@@ -1,51 +1,175 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MindScript â€” Wheelder</title>
-<meta name="description" content="An AI-native, high-level programming language engineered to encode abstract intent and emergent behavior.">
+<title>MindScript - Wheelder</title>
+<meta name="description" content="AI-native programming language for encoding intent and emergent behavior.">
+<meta property="og:title" content="MindScript - Wheelder">
+<meta property="og:description" content="AI-native programming language for encoding intent and emergent behavior.">
+<meta name="theme-color" content="#0b1220">
 <style>
   *{margin:0;padding:0;box-sizing:border-box}
-  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:#0b1220;color:#e5e7eb;line-height:1.6}
-  header{background:linear-gradient(135deg,#0f172a 0%,#1e1b4b 100%);padding:5rem 2rem 4rem;text-align:center;border-bottom:1px solid #1f2937}
-  h1{font-size:clamp(2.2rem,5vw,3.5rem);margin-bottom:.75rem;background:linear-gradient(120deg,#a5b4fc,#f0abfc);-webkit-background-clip:text;background-clip:text;color:transparent}
-  .tagline{font-size:1.25rem;color:#94a3b8;max-width:720px;margin:0 auto}
-  main{max-width:960px;margin:0 auto;padding:4rem 2rem}
-  h2{font-size:1.7rem;margin-bottom:1.25rem;color:#f1f5f9}
-  section{margin-bottom:3.5rem}
-  ul{list-style:none}
-  ul li{padding:1rem 1.25rem;margin-bottom:.6rem;background:#111827;border:1px solid #1f2937;border-left:3px solid #6366f1;border-radius:8px;color:#cbd5e1}
-  .cta{display:inline-block;background:linear-gradient(120deg,#6366f1,#a855f7);color:#fff;padding:.9rem 1.8rem;border-radius:10px;text-decoration:none;font-weight:600;margin-top:1rem}
-  .cta:hover{transform:scale(1.03);transition:transform .15s}
-  footer{text-align:center;padding:2.5rem 1rem;border-top:1px solid #1f2937;color:#64748b;font-size:.9rem}
-  footer a{color:#a5b4fc;text-decoration:none}
-  .brand-link{color:#a5b4fc;text-decoration:none}
+  :root{--bg:#0b1220;--panel:#111827;--muted:#94a3b8;--text:#e5e7eb;--head:#f8fafc;--accent1:#6366f1;--accent2:#a855f7;--border:#1f2937;--hi:#f59e0b}
+  html{scroll-behavior:smooth}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;background:var(--bg);color:var(--text);line-height:1.65}
+  a{color:#a5b4fc;text-decoration:none}
+  .nav{position:sticky;top:0;z-index:50;background:rgba(11,18,32,.85);backdrop-filter:blur(8px);border-bottom:1px solid var(--border)}
+  .nav-inner{max-width:1200px;margin:0 auto;padding:1rem 1.5rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem}
+  .brand{font-weight:700;color:var(--head);font-size:1.05rem}
+  .brand span{background:linear-gradient(120deg,#a5b4fc,#f0abfc);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .nav a.lnk{margin-left:1.5rem;color:var(--muted);font-size:.95rem}
+  .nav a.lnk:hover{color:var(--head)}
+  .hero{padding:6rem 1.5rem 4rem;text-align:center;background:radial-gradient(ellipse at top,#1e1b4b 0%,#0b1220 60%)}
+  .cat{display:inline-block;font-size:.78rem;letter-spacing:.15em;text-transform:uppercase;color:#a5b4fc;background:rgba(99,102,241,.1);border:1px solid rgba(99,102,241,.35);padding:.4rem .9rem;border-radius:999px;margin-bottom:1.5rem}
+  h1{font-size:clamp(2.4rem,5.5vw,4rem);margin-bottom:1rem;background:linear-gradient(120deg,#a5b4fc,#f0abfc);-webkit-background-clip:text;background-clip:text;color:transparent;line-height:1.1}
+  .hero p.lead{font-size:clamp(1.1rem,2vw,1.4rem);color:var(--muted);max-width:760px;margin:0 auto 1.25rem}
+  .hero p.tag{color:#cbd5e1;max-width:680px;margin:0 auto 2.5rem}
+  .cta-row{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+  .btn{display:inline-block;padding:.95rem 2rem;border-radius:10px;font-weight:600;font-size:1rem;transition:transform .15s}
+  .btn-pri{background:linear-gradient(120deg,var(--accent1),var(--accent2));color:#fff;box-shadow:0 8px 24px rgba(99,102,241,.35)}
+  .btn-pri:hover{transform:translateY(-2px)}
+  .btn-sec{background:transparent;color:var(--head);border:1px solid var(--border)}
+  .btn-sec:hover{border-color:#a5b4fc;color:#a5b4fc}
+  section.block{padding:5rem 1.5rem;max-width:1200px;margin:0 auto}
+  h2.section{font-size:clamp(1.8rem,3.5vw,2.4rem);text-align:center;margin-bottom:.75rem;color:var(--head)}
+  p.section-sub{text-align:center;color:var(--muted);max-width:640px;margin:0 auto 3rem}
+  .feats{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.25rem}
+  .feat{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:1.75rem 1.5rem;border-left:3px solid var(--accent1)}
+  .feat h3{color:var(--head);margin-bottom:.5rem;font-size:1.1rem}
+  .feat p{color:#cbd5e1;font-size:.95rem}
+  .tiers{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;margin-top:2rem}
+  .tier{position:relative;background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:2rem 1.75rem;display:flex;flex-direction:column}
+  .tier--hi{border-color:rgba(245,158,11,.55);box-shadow:0 0 0 1px rgba(245,158,11,.25),0 16px 48px rgba(245,158,11,.08)}
+  .tier-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--hi);color:#0b1220;font-weight:700;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;padding:.35rem .85rem;border-radius:999px}
+  .tier h3{color:var(--head);font-size:1.4rem;margin-bottom:.6rem}
+  .price{display:flex;align-items:baseline;gap:.4rem;margin-bottom:.4rem;flex-wrap:wrap}
+  .amt{font-size:2.2rem;font-weight:700;color:var(--head)}
+  .per{color:var(--muted);font-size:1rem}
+  .blurb{color:#cbd5e1;margin-bottom:1.5rem;min-height:3em}
+  .tier ul{list-style:none;flex:1;margin-bottom:1.5rem}
+  .tier ul li{padding:.5rem 0 .5rem 1.6rem;position:relative;color:#cbd5e1;font-size:.95rem}
+  .tier ul li:before{content:'+';position:absolute;left:0;color:#34d399;font-weight:700}
+  .tier-cta{display:block;text-align:center;padding:.85rem 1.25rem;border-radius:10px;font-weight:600;background:rgba(99,102,241,.15);color:#a5b4fc;border:1px solid rgba(99,102,241,.4);transition:all .15s}
+  .tier-cta:hover{background:linear-gradient(120deg,var(--accent1),var(--accent2));color:#fff;border-color:transparent}
+  .tier--hi .tier-cta{background:linear-gradient(120deg,var(--accent1),var(--accent2));color:#fff;border-color:transparent}
+  .faq{max-width:720px;margin:0 auto}
+  .faq details{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:1rem 1.25rem;margin-bottom:.75rem}
+  .faq summary{cursor:pointer;color:var(--head);font-weight:600;font-size:1rem}
+  .faq p{margin-top:.75rem;color:#cbd5e1}
+  .closing{text-align:center;padding:5rem 1.5rem;background:radial-gradient(ellipse at center,#1e1b4b 0%,#0b1220 70%)}
+  footer{border-top:1px solid var(--border);padding:2.5rem 1.5rem;text-align:center;color:#64748b;font-size:.9rem}
+  footer a{color:#a5b4fc}
+  .note{font-size:.85rem;color:var(--muted);margin-top:1.5rem;text-align:center}
+  @media (max-width:640px){.hero{padding:4rem 1.25rem 3rem}section.block{padding:3.5rem 1.25rem}}
 </style>
 </head>
 <body>
-<header>
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="brand">Wheelder &middot; <span>MindScript</span></div>
+    <div>
+      <a class="lnk" href="#features">Features</a>
+      <a class="lnk" href="#pricing">Pricing</a>
+      <a class="lnk" href="#faq">FAQ</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="cat">Developer Platform</div>
   <h1>MindScript</h1>
-  <p class="tagline">An AI-native, high-level programming language engineered to encode abstract intent and emergent behavior.</p>
+  <p class="lead">Stop describing what to compute. Start describing what to mean.</p>
+  <p class="tag">AI-native programming language for encoding intent and emergent behavior.</p>
+  <div class="cta-row">
+    <a class="btn btn-pri" href="#pricing">See Pricing</a>
+    <a class="btn btn-sec" href="mailto:sales@wheelder.com?subject=MindScript%20enquiry">Talk to Sales</a>
+  </div>
 </header>
-<main>
-  <section>
-    <h2>Highlights</h2>
-    <ul>
-        <li>Vibe-aware computation</li>
-        <li>Formalised qualitative signals</li>
-        <li>Open research project</li>
-        <li>Apache-2.0</li>
-    </ul>
-  </section>
-  <section>
-    <h2>Get in Touch</h2>
-    <p>Part of the <a class="brand-link" href="https://wheelder.com/">Wheelder platform</a>. Currently in active development â€” early-access partners welcome.</p>
-    <a class="cta" href="mailto:hello@wheelder.com?subject=MindScript%20enquiry">Request Information</a>
-  </section>
-</main>
+
+<section class="block" id="features">
+  <h2 class="section">What you get</h2>
+  <p class="section-sub">Built for production, priced for momentum. Every plan is paid - that is how we keep the lights honest.</p>
+  <div class="feats">
+      <article class='feat'><h3>Vibe-aware computation</h3><p>Express qualitative signals as first-class language primitives.</p></article>
+      <article class='feat'><h3>Intent-encoded syntax</h3><p>Compile abstract goals into deterministic execution graphs.</p></article>
+      <article class='feat'><h3>Formal semantics</h3><p>Backed by peer-reviewed research and reproducible benchmarks.</p></article>
+      <article class='feat'><h3>Polyglot runtimes</h3><p>Targets WASM, Python, Rust and the Wheelder Engine.</p></article>
+  </div>
+</section>
+
+<section class="block" id="pricing">
+  <h2 class="section">Pricing and subscription plans</h2>
+  <p class="section-sub">Choose the tier that matches where you are today. Upgrade in one click as you grow. Annual billing saves 20%.</p>
+  <div class="tiers">
+      <article class='tier'>
+        
+        <h3>Indie</h3>
+        <div class='price'><span class='amt'>$19</span><span class='per'>/mo</span></div>
+        <p class='blurb'>Solo developers and side projects.</p>
+        <ul>
+          <li>Single-seat license</li>
+          <li>Public registry access</li>
+          <li>Community Discord</li>
+          <li>Up to 50K compile units/mo</li>
+        </ul>
+        <a class='tier-cta' href='mailto:sales@wheelder.com?subject=MindScript%20-%20Indie'>Start Indie</a>
+      </article>
+      <article class='tier tier--hi'>
+        <div class='tier-badge'>Most popular</div>
+        <h3>Studio</h3>
+        <div class='price'><span class='amt'>$149</span><span class='per'>/mo</span></div>
+        <p class='blurb'>Teams shipping production agents.</p>
+        <ul>
+          <li>Up to 10 seats</li>
+          <li>Private registry</li>
+          <li>Priority compiler builds</li>
+          <li>500K compile units/mo</li>
+          <li>Email + chat support</li>
+        </ul>
+        <a class='tier-cta' href='mailto:sales@wheelder.com?subject=MindScript%20-%20Studio'>Choose Studio</a>
+      </article>
+      <article class='tier'>
+        
+        <h3>Enterprise</h3>
+        <div class='price'><span class='amt'>Custom</span><span class='per'></span></div>
+        <p class='blurb'>Regulated, on-prem and high-volume.</p>
+        <ul>
+          <li>Unlimited seats</li>
+          <li>On-prem deployment</li>
+          <li>Custom semantics extensions</li>
+          <li>SLA-backed support</li>
+          <li>Security review and DPA</li>
+        </ul>
+        <a class='tier-cta' href='mailto:sales@wheelder.com?subject=MindScript%20-%20Enterprise'>Talk to Sales</a>
+      </article>
+  </div>
+  <p class="note">Prices in USD, exclusive of tax. Annual contracts available. All plans include encrypted-in-transit and at-rest data, EU and US residency options on Business and above.</p>
+</section>
+
+<section class="block" id="faq">
+  <h2 class="section">Frequently asked</h2>
+  <div class="faq">
+    <details><summary>Is there a free trial?</summary><p>14-day free trial on all paid plans. No credit card required to start the trial - billing begins automatically when the trial ends, and you can cancel any time before then.</p></details>
+    <details><summary>Can I switch plans later?</summary><p>Yes. Upgrade instantly. Downgrades take effect at the end of the current billing cycle. Annual plans are pro-rated.</p></details>
+    <details><summary>Do you offer discounts?</summary><p>Annual billing is 20% off the monthly rate. Verified non-profits, students and academic researchers can apply for additional discounts via <a href="mailto:hello@wheelder.com">hello@wheelder.com</a>.</p></details>
+    <details><summary>How does support work?</summary><p>All paid plans include email support during business hours. Business and Enterprise tiers include Slack/Teams shared channels, priority response SLAs and named contacts.</p></details>
+    <details><summary>Where is data stored?</summary><p>EU (Frankfurt) and US (Virginia) by default on Business+ plans. Custom regions and on-prem options available on Enterprise.</p></details>
+  </div>
+</section>
+
+<section class="closing">
+  <h2 class="section" style="margin-bottom:1.25rem">Ready to get started?</h2>
+  <p style="color:var(--muted);max-width:560px;margin:0 auto 2rem">Join teams already shipping with MindScript. Start the 14-day trial - billing begins only when the trial ends.</p>
+  <div class="cta-row">
+    <a class="btn btn-pri" href="mailto:sales@wheelder.com?subject=Start%20trial%3A%20MindScript">Start 14-day trial</a>
+    <a class="btn btn-sec" href="mailto:sales@wheelder.com?subject=Demo%20request%3A%20MindScript">Request a demo</a>
+  </div>
+</section>
+
 <footer>
-  &copy; <span id="y"></span> Wheelder &middot; <a href="https://wheelder.com/">wheelder.com</a> &middot; <a href="https://mindscript.wheelder.com/">mindscript.wheelder.com</a>
+  Part of the <a href="https://wheelder.com/">Wheelder</a> platform &middot; <a href="https://mindscript.wheelder.com/">mindscript.wheelder.com</a>
+  <br>&copy; <span id="y"></span> Wheelder. All rights reserved.
   <script>document.getElementById('y').textContent=new Date().getFullYear();</script>
 </footer>
 </body>
