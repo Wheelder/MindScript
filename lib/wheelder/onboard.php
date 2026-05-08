@@ -102,6 +102,25 @@ switch ($path) {
         $auth->login(['kc_action' => 'register']);
         exit;
 
+    case '/auth/social':
+        // Direct-launch a configured Keycloak Identity Provider via kc_idp_hint.
+        // Usage: /auth/social?provider=google|microsoft|github|facebook|linkedin|twitter
+        //        &mode=signup (optional -- forces the registration form on the IdP).
+        $provider = strtolower((string)($_GET['provider'] ?? ''));
+        $allowed  = ['google','microsoft','github','facebook','linkedin','twitter'];
+        if (!in_array($provider, $allowed, true)) {
+            http_response_code(400);
+            header('Content-Type: text/plain; charset=utf-8');
+            echo "Unknown social provider. Allowed: " . implode(', ', $allowed);
+            exit;
+        }
+        $extra = ['kc_idp_hint' => $provider];
+        if (($_GET['mode'] ?? '') === 'signup') {
+            $extra['kc_action'] = 'register';
+        }
+        $auth->login($extra);
+        exit;
+
     case '/auth/callback':
         // callback() already routes the user: -> after_login if active, else -> checkout/{product}/{default_plan}.
         // If they came from /pricing with ?plan=, override default_plan for this hop.
@@ -151,6 +170,12 @@ switch ($path) {
   a.btn:hover{transform:translateY(-1px)}
   .primary{background:linear-gradient(135deg,var(--brand),var(--brand2));color:#0b1020}
   .ghost{background:transparent;color:var(--ink);border:1px solid rgba(255,255,255,.15)}
+  .social{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:6px}
+  .social a{display:flex;align-items:center;justify-content:center;gap:6px;padding:10px 8px;
+            border-radius:10px;text-decoration:none;font-size:13px;font-weight:600;
+            background:#1f2747;color:var(--ink);border:1px solid rgba(255,255,255,.08)}
+  .social a:hover{background:#27315a}
+  .social svg{width:16px;height:16px;flex:0 0 16px}
   .divider{display:flex;align-items:center;gap:10px;color:var(--mute);margin:18px 0;font-size:13px}
   .divider::before,.divider::after{content:"";flex:1;height:1px;background:rgba(255,255,255,.1)}
   ul.feat{list-style:none;padding:0;margin:0 0 24px;color:var(--mute);font-size:14px}
@@ -171,6 +196,15 @@ switch ($path) {
   <div class="row">
     <a class="btn primary" href="/auth/signup">Create account</a>
     <a class="btn ghost"   href="/auth/login">I already have an account</a>
+  </div>
+  <div class="divider">or continue with</div>
+  <div class="social">
+    <a href="/auth/social?provider=google"   title="Continue with Google">Google</a>
+    <a href="/auth/social?provider=microsoft" title="Continue with Microsoft">Microsoft</a>
+    <a href="/auth/social?provider=github"   title="Continue with GitHub">GitHub</a>
+    <a href="/auth/social?provider=facebook" title="Continue with Facebook">Facebook</a>
+    <a href="/auth/social?provider=linkedin" title="Continue with LinkedIn">LinkedIn</a>
+    <a href="/auth/social?provider=twitter"  title="Continue with X / Twitter">X</a>
   </div>
   <div class="divider">secure sign-in by auth.wheelder.com</div>
   <div class="foot">
